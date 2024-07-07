@@ -1,70 +1,70 @@
-import axios from 'axios'
-import type { AxiosInstance } from 'axios'
-import type { HYRequestConfig } from './type'
-
+import axios from "axios";
+import type { AxiosInstance, InternalAxiosRequestConfig } from "axios";
+import type { HYRequestConfig } from "./type";
 
 class HYRequest {
-  instance: AxiosInstance
+  instance: AxiosInstance;
   constructor(config: HYRequestConfig) {
-    this.instance = axios.create(config)
+    this.instance = axios.create(config);
     this.instance.interceptors.request.use(
-      (config) => {
-        // loading/token
-        return config
+      (config: InternalAxiosRequestConfig) => {
+        return config;
       },
       (err) => {
-        return err
+        return err;
       }
-    )
+    );
     this.instance.interceptors.response.use(
       (res) => {
-        return res.data
+        return res.data;
       },
       (err) => {
-        return err
+        return err;
       }
-    )
+    );
     this.instance.interceptors.request.use(
       config.interceptors?.requestSuccessFn,
       config.interceptors?.requestFailureFn
-    )
+    );
     this.instance.interceptors.response.use(
       config.interceptors?.responseSuccessFn,
       config.interceptors?.responseFailureFn
-    )
+    );
   }
   request<T = any>(config: HYRequestConfig<T>) {
     // 单次请求的成功拦截处理
     if (config.interceptors?.requestSuccessFn) {
-      config = config.interceptors.requestSuccessFn(config)
+      config = config.interceptors.requestSuccessFn(
+        config as InternalAxiosRequestConfig
+      );
     }
     return new Promise<T>((resolve, reject) => {
       this.instance
         .request<any, T>(config)
         .then((res) => {
           if (config.interceptors?.responseSuccessFn) {
-            res = config.interceptors.responseSuccessFn(res)
+            res = config.interceptors.responseSuccessFn(res);
           }
-          resolve(res)
+          resolve(res);
         })
         .catch((err) => {
-          reject(err)
-        })
-    })
+          reject(err);
+        });
+    });
   }
 
   get<T = any>(config: HYRequestConfig<T>) {
-    return this.request({ ...config, method: 'GET' })
+    return this.request({ ...config, method: "GET" });
   }
   post<T = any>(config: HYRequestConfig<T>) {
-    return this.request({ ...config, method: 'POST' })
+    return this.request({ ...config, method: "POST" });
   }
   delete<T = any>(config: HYRequestConfig<T>) {
-    return this.request({ ...config, method: 'DELETE' })
+    return this.request({ ...config, method: "DELETE" });
   }
   patch<T = any>(config: HYRequestConfig<T>) {
-    return this.request({ ...config, method: 'PATCH' })
+    return this.request({ ...config, method: "PATCH" });
   }
 }
 
-export default HYRequest
+export default HYRequest;
