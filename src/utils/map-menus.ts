@@ -1,24 +1,31 @@
 import type { RouteRecordRaw } from 'vue-router'
-import router from '@/router'
-
-function loadLocalRouters() {
+import type { Usermenu } from '@/types/userMenu.js'
+export interface fristRouterUrlType {
+  id: number;
+  url: string;
+  name: string;
+  sort: number;
+  type: number;
+  children?: any;
+  parentId: number;
+}
+export function loadLocalRouters() {
   const localRouters: RouteRecordRaw[] = []
   const files: Record<string, any> = import.meta.glob(
-    '../router/main/**/*.ts',
+    '../router/Main/**/*.ts',
     { eager: true }
   )
   for (const key in files) {
     const module = files[key]
-    // 取到每一个模块
-    // 把模块中的defaultpush进去
+    console.log(module)
     localRouters.push(module.default)
   }
-  return localRouters // router下的所有路由文件中的内容也就是我们需要的路由模块
+  return localRouters
 }
 
-// 获取到该用户的第一个路由权限在第一次进入页面以后我们进行跳转到第一个页面
-export let fristRouterUrl: any = null
-export function mapMenusToRouters(usermenu: any) {
+
+export let fristRouterUrl: fristRouterUrlType = null
+export function mapMenusToRouters(usermenu: Usermenu[]) {
   const localRouters = loadLocalRouters()
   const rouers: RouteRecordRaw[] = []
 
@@ -26,21 +33,17 @@ export function mapMenusToRouters(usermenu: any) {
     for (const submenu of menu.children) {
       const route = localRouters.find((item) => item.path === submenu.url)
       if (route) {
-        // 我们这里的重定向匹配只需要添加一次就行 只需要判断一下当前的一级路由是否已经添加过了如果添加过了 就不用在添加了
-
-        //  日你妈还不懂画个图去--简单的一批
         if (!rouers.find((item) => item.path === menu.url)) {
           rouers.push({ path: menu.url, redirect: route.path })
         }
         rouers.push(route)
       }
+      console.log(fristRouterUrl)
       if (fristRouterUrl === null && route) {
         fristRouterUrl = submenu
       }
     }
   }
-  // 把需要添加的路由返回出去
-
   return rouers
 }
 

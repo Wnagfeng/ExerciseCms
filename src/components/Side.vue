@@ -6,16 +6,29 @@
       </div>
       <div class="text" v-show="!isFold">蘑菇街商城管理系统</div>
     </div>
-    <el-menu :collapse="isFold" :default-active="'1'" :default-openeds="['1']" text-color="#b7bdc3"
+    <el-menu :collapse="isFold" :default-active="'1-1'" :default-openeds="['1']" text-color="#b7bdc3"
       active-text-color="#fff" background-color="#001529">
       <el-sub-menu class="el-sub-menu" index="1">
         <template #title>
-          <span class="elitemtitle">用户管理</span>
+          <span class="elitemtitle">系统总览</span>
         </template>
-        <el-menu-item index="1">Option 4-1</el-menu-item>
-        <el-menu-item index="2">Option 4-1</el-menu-item>
-        <el-menu-item index="3">Option 4-1</el-menu-item>
-        <el-menu-item index="4">Option 4-1</el-menu-item>
+        <el-menu-item index="1-1">商品统计</el-menu-item>
+      </el-sub-menu>
+      <el-sub-menu class="el-sub-menu" index="2">
+        <template #title>
+          <span class="elitemtitle">系统管理</span>
+        </template>
+        <el-menu-item index="2-1">用户管理</el-menu-item>
+        <el-menu-item index="2-2">部门管理</el-menu-item>
+        <el-menu-item index="2-3">菜单管理</el-menu-item>
+        <el-menu-item index="2-4">角色管理</el-menu-item>
+      </el-sub-menu>
+      <el-sub-menu class="el-sub-menu" index="3">
+        <template #title>
+          <span class="elitemtitle">商品管理</span>
+        </template>
+        <el-menu-item index="3-1">商品类别</el-menu-item>
+        <el-menu-item index="3-2">商品信息</el-menu-item>
       </el-sub-menu>
     </el-menu>
   </div>
